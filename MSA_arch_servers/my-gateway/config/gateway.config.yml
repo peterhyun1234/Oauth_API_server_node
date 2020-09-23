@@ -1,0 +1,78 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  api:
+    host: localhost
+    paths: '/ip'
+  was1:
+    host: localhost
+    path: '/was1'
+  was2:
+    host: localhost
+    path: '/was2'
+  was3:
+    host: localhost
+    path: '/was3'
+serviceEndpoints:
+  httpbin:
+    url: 'https://httpbin.org'
+  was1Service:
+    url: 'http://localhost:3000'
+  was2Service:
+    url: 'http://localhost:4000'
+  was3Service:
+    url: 'http://localhost:5000'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  default:
+    apiEndpoints:
+      - api
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - oauth2:
+      - proxy:
+          - action:
+              serviceEndpoint: httpbin 
+              changeOrigin: true
+  was1Pipeline:
+    apiEndpoints:
+      - was1
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: was1Service
+              changeOrigin: true
+  was2Pipeline:
+    apiEndpoints:
+      - was2
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: was2Service
+              changeOrigin: true
+  was3Pipeline:
+    apiEndpoints:
+      - was3
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: was3Service
+              changeOrigin: true
